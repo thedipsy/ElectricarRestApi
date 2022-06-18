@@ -11,12 +11,9 @@ import javax.persistence.*
 @Entity
 @Table(name = "ec_user")
 data class User(
-    //from UserDetails
-    private val isEnabled: Boolean = true,
-    private val isCredentialsNonExpired: Boolean = true,
-    private val isAccountNonExpired: Boolean = true,
-    private val isAccountNonLocked: Boolean = true,
-
+    @Id
+    private val username: String = "",
+    private var password: String = "",
     val name: String = "",
     val surname: String = "",
     val phone: String = "",
@@ -24,9 +21,11 @@ data class User(
     @Enumerated(EnumType.STRING)
     val role: Role = Role.ROLE_USER,
 
-    @Id
-    private val username: String = "",
-    private var password: String = "",
+    //from UserDetails
+    private val isEnabled: Boolean = true,
+    private val isCredentialsNonExpired: Boolean = true,
+    private val isAccountNonExpired: Boolean = true,
+    private val isAccountNonLocked: Boolean = true,
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
@@ -39,9 +38,6 @@ data class User(
 ) : UserDetails {
     override fun getUsername(): String = username
     override fun getPassword(): String = password
-    fun setPassword(encodedPassword: String) {
-        password = encodedPassword
-    }
 
     override fun isEnabled(): Boolean = isEnabled
     override fun isCredentialsNonExpired(): Boolean = isCredentialsNonExpired

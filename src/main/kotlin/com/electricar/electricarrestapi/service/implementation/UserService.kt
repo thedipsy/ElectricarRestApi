@@ -1,7 +1,9 @@
 package com.electricar.electricarrestapi.service.implementation
 
 import com.electricar.electricarrestapi.model.entity.User
+import com.electricar.electricarrestapi.model.enumeration.Role
 import com.electricar.electricarrestapi.model.exception.UserNotFoundException
+import com.electricar.electricarrestapi.model.request.RegisterRequest
 import com.electricar.electricarrestapi.repository.IUserRepository
 import com.electricar.electricarrestapi.service.interfaces.IUserService
 import org.springframework.security.core.userdetails.UserDetails
@@ -20,8 +22,15 @@ class UserService(
     override fun get(id: String): User = userRepository.findById(id).orElseThrow()
 
 
-    override fun register(user: User): User {
-        user.password = passwordEncoder.encode(user.password)
+    override fun register(registerRequest: RegisterRequest): User {
+        val user = User(
+            registerRequest.email,
+            passwordEncoder.encode(registerRequest.password),
+            registerRequest.name,
+            registerRequest.surname,
+            registerRequest.phone,
+            Role.ROLE_USER
+        )
         return userRepository.save(user)
     }
 
